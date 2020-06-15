@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<style type="text/css">
+		canvas {
+			border: 2px solid black;
+			display: block;
+			margin: auto;
+		}
+	</style>
+</head>
+<body>
+	<canvas width="800px" height="600px"></canvas>
+
+	<script type="text/javascript">
+		let canvas = document.querySelector("canvas");
+		let ctx = canvas.getContext("2d");
+
+		console.log(ctx.globalCompositeOperation);
+
+		let background = new Image();
+		background.src = "safecode.png"
+		background.style.opacity = "0.2";
+
+		function drawLines() {
+			ctx.strokeStyle = "rgba(255,0,0,0.7)";
+			ctx.lineWidth = 1.5;
+
+			for (let i = -100; i < canvas.height; i+=10) {
+				ctx.beginPath();
+				ctx.moveTo(0, 0+i);
+				ctx.lineTo(canvas.width, 100+i);
+				ctx.stroke();
+			}
+
+			for (let i = -200; i < canvas.height; i+=10) {
+				ctx.beginPath();
+				ctx.moveTo(0, 0+i);
+				ctx.lineTo(canvas.width, 200+i);
+				ctx.stroke();
+			}
+
+			for (let i = 0; i < canvas.height + 200; i+=10) {
+				ctx.beginPath();
+				ctx.moveTo(0, 0+i);
+				ctx.lineTo(canvas.width, i-200);
+				ctx.stroke();
+			}
+
+			for (let i = 0; i < canvas.height + 300; i+=10) {
+				ctx.beginPath();
+				ctx.moveTo(0, 0+i);
+				ctx.lineTo(canvas.width, i-300);
+				ctx.stroke();
+			}
+		}
+
+		function resetAll() {
+			ctx.globalCompositeOperation = "source-over";
+			ctx.fillStyle = "white";
+			ctx.rect(0, 0, canvas.width, canvas.height)
+			ctx.fill();
+
+			ctx.globalAlpha = 0.4;
+			ctx.drawImage(background,0,0,canvas.width,canvas.height);
+			ctx.globalAlpha = 1;
+
+			drawLines();
+		}
+
+		window.addEventListener("load", function() {
+			ctx.globalAlpha = 0.3;
+			ctx.drawImage(background,0,0,canvas.width,canvas.height);
+			ctx.globalAlpha = 1;
+
+			drawLines();
+
+			canvas.addEventListener("mousemove", function(e) {
+				resetAll();
+				drawLens(e.layerX,e.layerY);
+			})
+		})
+
+		function drawLens(x,y) {
+			ctx.globalCompositeOperation = "multiply";
+			ctx.strokeStyle = "black";
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.fillStyle = "rgba(255,0,0,0.6)";
+			ctx.arc(x, y-20, 50, 0, 2 * Math.PI);
+			ctx.stroke();
+			ctx.fill();
+		}
+	</script>
+</body>
+</html>
